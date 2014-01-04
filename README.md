@@ -1,0 +1,4 @@
+workshops
+=========
+
+Workshops module
