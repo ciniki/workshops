@@ -352,7 +352,14 @@ function ciniki_workshops_main() {
 							M.api.err(rsp);
 							return false;
 						} 
-						M.ciniki_workshops_main.edit.close();
+						var wid = rsp.id;
+						if( rsp.id > 0 ) {
+							var cb = M.ciniki_workshops_main.edit.cb;
+							M.ciniki_workshops_main.edit.close();
+							M.ciniki_workshops_main.showWorkshop(cb,rsp.id);
+						} else {
+							M.ciniki_workshops_main.edit.close();
+						}
 					});
 			} else {
 				this.edit.close();
