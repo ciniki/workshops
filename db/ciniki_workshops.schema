@@ -11,6 +11,7 @@
 # uuid:				The Universal Unique ID.
 # business_id:		The business the workshop is attached to.
 # name:				The name for the workshop.
+# permalink:		The permalink for use in the url of the workshop.
 # url:				The URL for more information on the workshop.
 # description:		The longer text description of the workshop (optional).
 #
@@ -21,6 +22,10 @@
 #					0x02 - Online Registrations enabled
 #					0x04 -
 #					0x08 - 
+#
+# primary_image_id:	The ID of the main/highlight image for the workshop.
+#
+# long_description:	The full description for the workshop detail page on the website.
 #
 # start_date:		The date of the start of the workshop.
 # end_date:			The date of the end of the workshop.
