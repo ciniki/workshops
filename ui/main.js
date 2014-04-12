@@ -72,6 +72,7 @@ function ciniki_workshops_main() {
 				'name':{'label':'Name'},
 				'start_date':{'label':'Start'},
 				'end_date':{'label':'End'},
+				'times':{'label':'Hours'},
 				'url':{'label':'Website'},
 				}},
 			'_registrations':{'label':'', 'hidelabel':'yes', 'visible':'no', 'list':{
@@ -189,6 +190,7 @@ function ciniki_workshops_main() {
                 'url':{'label':'URL', 'hint':'Enter the http:// address for your workshops website', 'type':'text'},
                 'start_date':{'label':'Start', 'type':'date'},
                 'end_date':{'label':'End', 'type':'date'},
+                'times':{'label':'Hours', 'type':'text'},
                 }}, 
 			'_registrations':{'label':'Registrations', 'visible':'no', 'fields':{
 				'reg_flags':{'label':'Options', 'active':'no', 'type':'flags', 'joined':'no', 'flags':this.regFlags},
@@ -279,6 +281,7 @@ function ciniki_workshops_main() {
 				} else {
 					p.sections.info.list.end_date.visible = 'no';
 				}
+				p.sections.info.list.times.visible=(rsp.workshop.times!=null&&rsp.workshop.times!='')?'yes':'no';
 				if( rsp.workshop.url != null && rsp.workshop.url != '' ) {
 					p.sections.info.list.url.visible = 'yes';
 				} else {

@@ -15,8 +15,15 @@ function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, 
 		. "ciniki_workshops.name, "
 		. "ciniki_workshops.permalink, "
 		. "ciniki_workshops.url, "
+		. "DATE_FORMAT(ciniki_workshops.start_date, '%M') AS start_month, "
+		. "DATE_FORMAT(ciniki_workshops.start_date, '%D') AS start_day, "
+		. "DATE_FORMAT(ciniki_workshops.start_date, '%Y') AS start_year, "
+		. "IF(ciniki_workshops.end_date = '0000-00-00', '', DATE_FORMAT(ciniki_workshops.end_date, '%M')) AS end_month, "
+		. "IF(ciniki_workshops.end_date = '0000-00-00', '', DATE_FORMAT(ciniki_workshops.end_date, '%D')) AS end_day, "
+		. "IF(ciniki_workshops.end_date = '0000-00-00', '', DATE_FORMAT(ciniki_workshops.end_date, '%Y')) AS end_year, "
 		. "DATE_FORMAT(ciniki_workshops.start_date, '%a %b %c, %Y') AS start_date, "
 		. "DATE_FORMAT(ciniki_workshops.end_date, '%a %b %c, %Y') AS end_date, "
+		. "ciniki_workshops.times, "
 		. "ciniki_workshops.description AS short_description, "
 		. "ciniki_workshops.long_description, "
 		. "ciniki_workshops.primary_image_id, "
@@ -38,7 +45,8 @@ function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, 
 	$rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.artclub', array(
 		array('container'=>'workshops', 'fname'=>'id', 
 			'fields'=>array('id', 'name', 'permalink', 'image_id'=>'primary_image_id', 
-			'start_date', 'end_date', 
+			'start_date', 'start_day', 'start_month', 'start_year', 
+			'end_date', 'end_day', 'end_month', 'end_year', 'times',
 			'url', 'short_description', 'description'=>'long_description')),
 		array('container'=>'images', 'fname'=>'image_id', 
 			'fields'=>array('image_id', 'title'=>'image_name', 'permalink'=>'image_permalink',
