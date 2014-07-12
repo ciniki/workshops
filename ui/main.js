@@ -68,14 +68,14 @@ function ciniki_workshops_main() {
 			'_image':{'label':'', 'aside':'yes', 'fields':{
 				'primary_image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 				}},
-			'info':{'label':'', 'list':{
+			'info':{'label':'', 'aside':'yes', 'list':{
 				'name':{'label':'Name'},
 				'start_date':{'label':'Start'},
 				'end_date':{'label':'End'},
 				'times':{'label':'Hours'},
 				'url':{'label':'Website'},
 				}},
-			'_registrations':{'label':'', 'hidelabel':'yes', 'visible':'no', 'list':{
+			'_registrations':{'label':'', 'aside':'yes', 'hidelabel':'yes', 'visible':'no', 'list':{
 				'registrations':{'label':'Tickets'},
 				}},
 			'description':{'label':'Description', 'type':'htmlcontent'},
@@ -185,14 +185,14 @@ function ciniki_workshops_main() {
 			'_image':{'label':'', 'aside':'yes', 'fields':{
 				'primary_image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'controls':'all', 'history':'no'},
 			}},
-            'general':{'label':'General', 'fields':{
+            'general':{'label':'General', 'aside':'yes', 'fields':{
                 'name':{'label':'Name', 'hint':'Workshops name', 'type':'text'},
                 'url':{'label':'URL', 'hint':'Enter the http:// address for your workshops website', 'type':'text'},
                 'start_date':{'label':'Start', 'type':'date'},
                 'end_date':{'label':'End', 'type':'date'},
                 'times':{'label':'Hours', 'type':'text'},
                 }}, 
-			'_registrations':{'label':'Registrations', 'visible':'no', 'fields':{
+			'_registrations':{'label':'Registrations', 'aside':'yes', 'visible':'no', 'fields':{
 				'reg_flags':{'label':'Options', 'active':'no', 'type':'flags', 'joined':'no', 'flags':this.regFlags},
 				'num_tickets':{'label':'Number of Tickets', 'active':'no', 'type':'text', 'size':'small'},
 				}},
