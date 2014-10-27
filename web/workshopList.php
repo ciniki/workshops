@@ -41,7 +41,7 @@ function ciniki_workshops_web_workshopList($ciniki, $settings, $business_id, $ty
 		. "WHERE ciniki_workshops.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
 	if( $type == 'past' ) {
 		$strsql .= "AND ((ciniki_workshops.end_date > ciniki_workshops.start_date AND ciniki_workshops.end_date < DATE(NOW())) "
-				. "OR (ciniki_workshops.end_date < ciniki_workshops.start_date AND ciniki_workshops.start_date <= DATE(NOW())) "
+				. "OR (ciniki_workshops.end_date < ciniki_workshops.start_date AND ciniki_workshops.start_date < DATE(NOW())) "
 				. ") "
 			. "GROUP BY ciniki_workshops.id "
 			. "ORDER BY ciniki_workshops.start_date DESC "
