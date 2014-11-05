@@ -27,6 +27,7 @@ function ciniki_workshops_workshopGet($ciniki) {
         'workshop_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Workshop'), 
 		'images'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Images'),
 		'files'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Files'),
+		'webcollections'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Web Collections'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -163,6 +164,26 @@ function ciniki_workshops_workshopGet($ciniki) {
 		}
 		if( isset($rc['files']) ) {
 			$workshop['files'] = $rc['files'];
+		}
+	}
+
+	//
+	// Get the list of web collections, and which ones this workshop is attached to
+	//
+	if( isset($args['webcollections']) && $args['webcollections'] == 'yes'
+		&& isset($ciniki['business']['modules']['ciniki.web']) 
+		&& ($ciniki['business']['modules']['ciniki.web']['flags']&0x08) == 0x08
+		) {
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'hooks', 'webCollectionList');
+		$rc = ciniki_web_hooks_webCollectionList($ciniki, $args['business_id'],
+			array('object'=>'ciniki.workshops.workshop', 'object_id'=>$args['workshop_id']));
+		if( $rc['stat'] != 'ok' ) {	
+			return $rc;
+		}
+		if( isset($rc['collections']) ) {
+			$workshop['_webcollections'] = $rc['collections'];
+			$workshop['webcollections'] = $rc['selected'];
+			$workshop['webcollections_text'] = $rc['selected_text'];
 		}
 	}
 

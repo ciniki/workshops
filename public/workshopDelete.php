@@ -172,6 +172,20 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
 */
 
 	//
+	// Remove the workshop from any web collections
+	//
+	if( isset($ciniki['business']['modules']['ciniki.web']) 
+		&& ($ciniki['business']['modules']['ciniki.web']['flags']&0x08) == 0x08
+		) {
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'hooks', 'webCollectionDeleteObjRef');
+		$rc = ciniki_web_hooks_collectionDeleteObjRef($ciniki, $args['business_id'],
+			array('object'=>'ciniki.workshops.workshop', 'object_id'=>$args['workshop_id']));
+		if( $rc['stat'] != 'ok' ) {	
+			return $rc;
+		}
+	}
+
+	//
 	// Remove the workshop
 	//
 	$rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.workshops.workshop', 

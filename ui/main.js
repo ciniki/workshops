@@ -74,6 +74,7 @@ function ciniki_workshops_main() {
 				'end_date':{'label':'End'},
 				'times':{'label':'Hours'},
 				'url':{'label':'Website'},
+				'webcollections_text':{'label':'Web Collections'},
 				}},
 			'_registrations':{'label':'', 'aside':'yes', 'hidelabel':'yes', 'visible':'no', 'list':{
 				'registrations':{'label':'Tickets'},
@@ -192,6 +193,9 @@ function ciniki_workshops_main() {
                 'end_date':{'label':'End', 'type':'date'},
                 'times':{'label':'Hours', 'type':'text'},
                 }}, 
+			'_webcollections':{'label':'Web Collections', 'aside':'yes', 'active':'no', 'fields':{
+				'webcollections':{'label':'', 'hidelabel':'yes', 'type':'collection'},
+				}},
 			'_registrations':{'label':'Registrations', 'aside':'yes', 'visible':'no', 'fields':{
 				'reg_flags':{'label':'Options', 'active':'no', 'type':'flags', 'joined':'no', 'flags':this.regFlags},
 				'num_tickets':{'label':'Number of Tickets', 'active':'no', 'type':'text', 'size':'small'},
@@ -233,6 +237,18 @@ function ciniki_workshops_main() {
 		if( aG != null ) {
 			args = eval(aG);
 		}
+		
+		//
+		// Check if web collections are enabled
+		//
+		if( M.curBusiness.modules['ciniki.web'] != null 
+			&& (M.curBusiness.modules['ciniki.web'].flags&0x08) ) {
+			this.workshop.sections.info.list.webcollections_text.visible = 'yes';
+			this.edit.sections._webcollections.active = 'yes';
+		} else {
+			this.workshop.sections.info.list.webcollections_text.visible = 'no';
+			this.edit.sections._webcollections.active = 'no';
+		}
 
 		//
 		// Create the app container if it doesn't exist, and clear it out
@@ -269,7 +285,8 @@ function ciniki_workshops_main() {
 			this.workshop.workshop_id = eid;
 		}
 		var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'business_id':M.curBusinessID, 
-			'workshop_id':this.workshop.workshop_id, 'images':'yes', 'files':'yes'}, function(rsp) {
+			'workshop_id':this.workshop.workshop_id, 'images':'yes', 
+			'files':'yes', 'sponsors':'yes', 'webcollections':'yes'}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
 					return false;
@@ -315,7 +332,7 @@ function ciniki_workshops_main() {
 
 		if( this.edit.workshop_id > 0 ) {
 			var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'business_id':M.curBusinessID, 
-				'workshop_id':this.edit.workshop_id}, function(rsp) {
+				'workshop_id':this.edit.workshop_id, 'webcollections':'yes'}, function(rsp) {
 					if( rsp.stat != 'ok' ) {
 						M.api.err(rsp);
 						return false;
@@ -324,6 +341,21 @@ function ciniki_workshops_main() {
 					M.ciniki_workshops_main.edit.refresh();
 					M.ciniki_workshops_main.edit.show(cb);
 				});
+		} else if( this.edit.sections._webcollections.active == 'yes' ) {
+			// Get the list of collections
+			M.api.getJSONCb('ciniki.web.collectionList', {'business_id':M.curBusinessID}, function(rsp) {
+				if( rsp.stat != 'ok' ) {
+					M.api.err(rsp);
+					return false;
+				}
+				var p = M.ciniki_workshops_main.edit;
+				p.data = {};
+				if( rsp.collections != null ) {
+					p.data['_webcollections'] = rsp.collections;
+				}
+				p.refresh();
+				p.show(cb);
+			});
 		} else {
 			this.edit.data = {};
 			this.edit.show(cb);
