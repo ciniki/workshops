@@ -342,6 +342,8 @@ function ciniki_workshops_main() {
 					M.ciniki_workshops_main.edit.show(cb);
 				});
 		} else if( this.edit.sections._webcollections.active == 'yes' ) {
+			this.edit.reset();
+			this.edit.data = {};
 			// Get the list of collections
 			M.api.getJSONCb('ciniki.web.collectionList', {'business_id':M.curBusinessID}, function(rsp) {
 				if( rsp.stat != 'ok' ) {

@@ -181,6 +181,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
 		$rc = ciniki_web_hooks_collectionDeleteObjRef($ciniki, $args['business_id'],
 			array('object'=>'ciniki.workshops.workshop', 'object_id'=>$args['workshop_id']));
 		if( $rc['stat'] != 'ok' ) {	
+			ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
 			return $rc;
 		}
 	}

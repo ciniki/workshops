@@ -52,7 +52,8 @@ function ciniki_workshops_web_webCollectionList($ciniki, $settings, $business_id
 			. ") "
 		. "WHERE ciniki_web_collection_objrefs.collection_id = '" . ciniki_core_dbQuote($ciniki, $args['collection_id']) . "' "
 		. "AND ciniki_web_collection_objrefs.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
-		. "AND ciniki_web_collection_objrefs.object = 'ciniki.workshops.workshop' ";
+		. "AND ciniki_web_collection_objrefs.object = 'ciniki.workshops.workshop' "
+		. "";
 	if( isset($args['type']) && $args['type'] == 'past' ) {
 		$strsql .= "GROUP BY ciniki_workshops.id ";
 		$strsql .= "ORDER BY ciniki_workshops.start_date DESC ";
