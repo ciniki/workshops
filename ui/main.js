@@ -153,21 +153,6 @@ function ciniki_workshops_main() {
 				return 'M.startApp(\'ciniki.workshops.files\',null,\'M.ciniki_workshops_main.showWorkshop();\',\'mc\',{\'file_id\':\'' + d.file.id + '\'});';
 			}
 		};
-		this.workshop.thumbSrc = function(s, i, d) {
-			if( d.image.image_data != null && d.image.image_data != '' ) {
-				return d.image.image_data;
-			} else {
-				return '/ciniki-mods/core/ui/themes/default/img/noimage_75.jpg';
-			}
-		};
-		this.workshop.thumbTitle = function(s, i, d) {
-			if( d.image.name != null ) { return d.image.name; }
-			return '';
-		};
-		this.workshop.thumbID = function(s, i, d) {
-			if( d.image.id != null ) { return d.image.id; }
-			return 0;
-		};
 		this.workshop.thumbFn = function(s, i, d) {
 			return 'M.startApp(\'ciniki.workshops.images\',null,\'M.ciniki_workshops_main.showWorkshop();\',\'mc\',{\'workshop_image_id\':\'' + d.image.id + '\'});';
 		};
