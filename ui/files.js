@@ -168,6 +168,6 @@ function ciniki_workshops_files() {
 	};
 
 	this.downloadFile = function(fid) {
-		window.open(M.api.getUploadURL('ciniki.workshops.fileDownload', {'business_id':M.curBusinessID, 'file_id':fid}));
+		M.api.openFile('ciniki.workshops.fileDownload', {'business_id':M.curBusinessID, 'file_id':fid});
 	};
 }
