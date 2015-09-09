@@ -20,12 +20,14 @@ function ciniki_workshops_main() {
 			'upcoming':{'label':'Upcoming Workshops', 'type':'simplegrid', 'num_cols':2,
 				'headerValues':null,
 				'cellClasses':['multiline center nobreak', 'multiline'],
-				'noData':'No workshops added'
+				'noData':'No workshops added',
+				'addTxt':'Add Workshop',
+				'addFn':'M.ciniki_workshops_main.showEdit(\'M.ciniki_workshops_main.showMenu();\',0);',
 				},
 			'past':{'label':'Past Workshops', 'type':'simplegrid', 'num_cols':2,
 				'headerValues':null,
 				'cellClasses':['multiline center nobreak', 'multiline'],
-				'noData':'No workshops'
+				'noData':'No workshops',
 				},
 			};
 		this.menu.sectionData = function(s) { return this.data[s]; }
