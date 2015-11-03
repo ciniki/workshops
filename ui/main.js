@@ -67,7 +67,7 @@ function ciniki_workshops_main() {
 		this.workshop.data = {};
 		this.workshop.workshop_id = 0;
 		this.workshop.sections = {
-			'_image':{'label':'', 'aside':'yes', 'fields':{
+			'_image':{'label':'', 'aside':'yes', 'type':'imageform', 'fields':{
 				'primary_image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 				}},
 			'info':{'label':'', 'aside':'yes', 'list':{
@@ -170,7 +170,7 @@ function ciniki_workshops_main() {
 		this.edit.data = null;
 		this.edit.workshop_id = 0;
         this.edit.sections = { 
-			'_image':{'label':'', 'aside':'yes', 'fields':{
+			'_image':{'label':'', 'aside':'yes', 'type':'imageform', 'fields':{
 				'primary_image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'controls':'all', 'history':'no'},
 			}},
             'general':{'label':'General', 'aside':'yes', 'fields':{
