@@ -6,45 +6,45 @@
 #
 # Fields
 # ------
-# id:				The ID of the workshop image.
-# uuid:				The Universal Unique ID.
-# business_id:		The ID of the business the workshop is attached to.
+# id:               The ID of the workshop image.
+# uuid:             The Universal Unique ID.
+# business_id:      The ID of the business the workshop is attached to.
 #
-# workshop_id:		The ID of the workshop from the ciniki_workshops table.
+# workshop_id:      The ID of the workshop from the ciniki_workshops table.
 # 
-# name:				The name for the image.
-# permalink:		The permalink for the image, to be used in the url.
+# name:             The name for the image.
+# permalink:        The permalink for the image, to be used in the url.
 #
-# webflags:			The flags for displaying on the website.  This allows
-#					for a participant to upload images without them being
-#					displayed on the website.  This could be used for 
-#					artists to submit porfolios and determine which ones show up.
+# webflags:         The flags for displaying on the website.  This allows
+#                   for a participant to upload images without them being
+#                   displayed on the website.  This could be used for 
+#                   artists to submit porfolios and determine which ones show up.
 #
-#					0x01 - Private (do not show on website, can be used to share marketing material with organizers)
+#                   0x01 - Private (do not show on website, can be used to share marketing material with organizers)
 #
-# image_id:			The ID of the image in the ciniki.images module.
+# image_id:         The ID of the image in the ciniki.images module.
 #
-# description:		The description for the image.
+# description:      The description for the image.
 #
-# url:				**future** The link back to the participants website for the item in the image.
+# url:              **future** The link back to the participants website for the item in the image.
 #
-# date_added:		The UTC date and time the image was added to the workshop.
-# last_updated:		The UTC date and time the image was last updated.
+# date_added:       The UTC date and time the image was added to the workshop.
+# last_updated:     The UTC date and time the image was last updated.
 #
 create table ciniki_workshop_images (
-	id int not null auto_increment,
-	uuid char(36) not null,
-	business_id int not null,
-	workshop_id int not null,
-	name varchar(200) not null,
-	permalink varchar(200) not null,
-	webflags tinyint unsigned not null,
-	image_id int not null,
-	description varchar(6000) not null,
-	url varchar(255) not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key (id),
-	index (workshop_id, name),
-	index (business_id, uuid, last_updated)
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    workshop_id int not null,
+    name varchar(200) not null,
+    permalink varchar(200) not null,
+    webflags tinyint unsigned not null,
+    image_id int not null,
+    description varchar(6000) not null,
+    url varchar(255) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    index (workshop_id, name),
+    index (business_id, uuid, last_updated)
 ) ENGINE='InnoDB', COMMENT='v1.01';
