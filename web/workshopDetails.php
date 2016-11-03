@@ -57,7 +57,7 @@ function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, 
         return $rc;
     }
     if( !isset($rc['workshops']) || count($rc['workshops']) < 1 ) {
-        return array('stat'=>'404', 'err'=>array('pkg'=>'ciniki', 'code'=>'1466', 'msg'=>"I'm sorry, but we can't find the workshop you requested."));
+        return array('stat'=>'404', 'err'=>array('code'=>'ciniki.workshops.28', 'msg'=>"I'm sorry, but we can't find the workshop you requested."));
     }
     $workshop = array_pop($rc['workshops']);
 

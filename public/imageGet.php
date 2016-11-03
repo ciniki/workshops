@@ -64,7 +64,7 @@ function ciniki_workshops_imageGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['images']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'1456', 'msg'=>'Unable to find image'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.workshops.18', 'msg'=>'Unable to find image'));
     }
     $image = $rc['images'][0]['image'];
     

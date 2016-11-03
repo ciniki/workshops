@@ -51,7 +51,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['workshop']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1459', 'msg'=>'The workshop does not exist'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.22', 'msg'=>'The workshop does not exist'));
     }
     $workshop_uuid = $rc['workshop']['uuid'];
 

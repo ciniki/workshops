@@ -71,7 +71,7 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
         return $rc;
     }
     if( $rc['num_rows'] > 0 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1464', 'msg'=>'You already have an workshop with this name, please choose another name'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.21', 'msg'=>'You already have an workshop with this name, please choose another name'));
     }
 
     //

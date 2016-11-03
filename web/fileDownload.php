@@ -30,7 +30,7 @@ function ciniki_workshops_web_fileDownload($ciniki, $business_id, $workshop_perm
         return $rc;
     }
     if( !isset($rc['file']) ) {
-        return array('stat'=>'noexist', 'err'=>array('pkg'=>'ciniki', 'code'=>'1417', 'msg'=>'Unable to find requested file'));
+        return array('stat'=>'noexist', 'err'=>array('code'=>'ciniki.workshops.27', 'msg'=>'Unable to find requested file'));
     }
     $rc['file']['filename'] = $rc['file']['name'] . '.' . $rc['file']['extension'];
 

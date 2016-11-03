@@ -67,7 +67,7 @@ function ciniki_workshops_workshopUpdate(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['workshop']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1462', 'msg'=>'Workshop not found'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.25', 'msg'=>'Workshop not found'));
     }
     $workshop = $rc['workshop'];
 
@@ -88,7 +88,7 @@ function ciniki_workshops_workshopUpdate(&$ciniki) {
             return $rc;
         }
         if( $rc['num_rows'] > 0 ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1463', 'msg'=>'You already have an workshop with this name, please choose another name'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.26', 'msg'=>'You already have an workshop with this name, please choose another name'));
         }
     }
 

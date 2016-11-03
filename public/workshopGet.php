@@ -95,7 +95,7 @@ function ciniki_workshops_workshopGet($ciniki) {
             return $rc;
         }
         if( !isset($rc['workshops']) || !isset($rc['workshops'][0]) ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1460', 'msg'=>'Unable to find workshop'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.23', 'msg'=>'Unable to find workshop'));
         }
         $workshop = $rc['workshops'][0]['workshop'];
         ciniki_core_loadMethod($ciniki, 'ciniki', 'images', 'private', 'loadCacheThumbnail');
@@ -121,7 +121,7 @@ function ciniki_workshops_workshopGet($ciniki) {
             return $rc;
         }
         if( !isset($rc['workshops']) || !isset($rc['workshops'][0]) ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1461', 'msg'=>'Unable to find workshop'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.24', 'msg'=>'Unable to find workshop'));
         }
         $workshop = $rc['workshops'][0]['workshop'];
     }
