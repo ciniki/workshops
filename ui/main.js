@@ -1,5 +1,5 @@
 //
-// This app will handle the listing, additions and deletions of workshops.  These are associated business.
+// This app will handle the listing, additions and deletions of workshops.  These are associated tenant.
 //
 function ciniki_workshops_main() {
     //
@@ -101,7 +101,7 @@ function ciniki_workshops_main() {
         };
         this.workshop.addDropImage = function(iid) {
             var rsp = M.api.getJSON('ciniki.workshops.imageAdd',
-                {'business_id':M.curBusinessID, 'image_id':iid, 'workshop_id':M.ciniki_workshops_main.workshop.workshop_id});
+                {'tnid':M.curTenantID, 'image_id':iid, 'workshop_id':M.ciniki_workshops_main.workshop.workshop_id});
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
@@ -110,7 +110,7 @@ function ciniki_workshops_main() {
         };
         this.workshop.addDropImageRefresh = function() {
             if( M.ciniki_workshops_main.workshop.workshop_id > 0 ) {
-                var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'business_id':M.curBusinessID, 
+                var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'tnid':M.curTenantID, 
                     'workshop_id':M.ciniki_workshops_main.workshop.workshop_id, 'images':'yes'}, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -200,7 +200,7 @@ function ciniki_workshops_main() {
             };  
         this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.workshops.workshopHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.workshops.workshopHistory', 'args':{'tnid':M.curTenantID, 
                 'workshop_id':this.workshop_id, 'field':i}};
         }
         this.edit.addDropImage = function(iid) {
@@ -228,8 +228,8 @@ function ciniki_workshops_main() {
         //
         // Check if web collections are enabled
         //
-        if( M.curBusiness.modules['ciniki.web'] != null 
-            && (M.curBusiness.modules['ciniki.web'].flags&0x08) ) {
+        if( M.curTenant.modules['ciniki.web'] != null 
+            && (M.curTenant.modules['ciniki.web'].flags&0x08) ) {
             this.workshop.sections.info.list.webcollections_text.visible = 'yes';
             this.edit.sections._webcollections.active = 'yes';
         } else {
@@ -253,7 +253,7 @@ function ciniki_workshops_main() {
     this.showMenu = function(cb) {
         this.menu.data = {};
         var rsp = M.api.getJSONCb('ciniki.workshops.workshopList', 
-            {'business_id':M.curBusinessID}, function(rsp) {
+            {'tnid':M.curTenantID}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -271,7 +271,7 @@ function ciniki_workshops_main() {
         if( eid != null ) {
             this.workshop.workshop_id = eid;
         }
-        var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'business_id':M.curBusinessID, 
+        var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'tnid':M.curTenantID, 
             'workshop_id':this.workshop.workshop_id, 'images':'yes', 
             'files':'yes', 'sponsors':'yes', 'webcollections':'yes'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
@@ -307,7 +307,7 @@ function ciniki_workshops_main() {
             this.edit.workshop_id = eid;
         }
 
-        if( (M.curBusiness.modules['ciniki.workshops'].flags&0x03) > 0 ) {
+        if( (M.curTenant.modules['ciniki.workshops'].flags&0x03) > 0 ) {
             this.edit.sections._registrations.visible = 'yes';
             this.edit.sections._registrations.fields.reg_flags.active = 'yes';
             this.edit.sections._registrations.fields.num_tickets.active = 'yes';
@@ -318,7 +318,7 @@ function ciniki_workshops_main() {
         }
 
         if( this.edit.workshop_id > 0 ) {
-            var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.workshops.workshopGet', {'tnid':M.curTenantID, 
                 'workshop_id':this.edit.workshop_id, 'webcollections':'yes'}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -332,7 +332,7 @@ function ciniki_workshops_main() {
             this.edit.reset();
             this.edit.data = {};
             // Get the list of collections
-            M.api.getJSONCb('ciniki.web.collectionList', {'business_id':M.curBusinessID}, function(rsp) {
+            M.api.getJSONCb('ciniki.web.collectionList', {'tnid':M.curTenantID}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -356,7 +356,7 @@ function ciniki_workshops_main() {
             var c = this.edit.serializeForm('no');
             if( c != '' ) {
                 var rsp = M.api.postJSONCb('ciniki.workshops.workshopUpdate', 
-                    {'business_id':M.curBusinessID, 'workshop_id':M.ciniki_workshops_main.edit.workshop_id}, c,
+                    {'tnid':M.curTenantID, 'workshop_id':M.ciniki_workshops_main.edit.workshop_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -371,7 +371,7 @@ function ciniki_workshops_main() {
             var c = this.edit.serializeForm('yes');
             if( c != '' ) {
                 var rsp = M.api.postJSONCb('ciniki.workshops.workshopAdd', 
-                    {'business_id':M.curBusinessID}, c, function(rsp) {
+                    {'tnid':M.curTenantID}, c, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
                             return false;
@@ -394,7 +394,7 @@ function ciniki_workshops_main() {
     this.removeWorkshop = function() {
         if( confirm("Are you sure you want to remove '" + this.workshop.data.name + "' as an workshop ?") ) {
             var rsp = M.api.getJSONCb('ciniki.workshops.workshopDelete', 
-                {'business_id':M.curBusinessID, 'workshop_id':M.ciniki_workshops_main.workshop.workshop_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'workshop_id':M.ciniki_workshops_main.workshop.workshop_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;

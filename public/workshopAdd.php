@@ -2,13 +2,13 @@
 //
 // Description
 // -----------
-// This method will add a new workshop for the business.
+// This method will add a new workshop for the tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to add the workshop to.
+// tnid:     The ID of the tenant to add the workshop to.
 // name:            The name of the workshop.
 // url:             (optional) The URL for the workshop website.
 // description:     (optional) The description for the workshop.
@@ -25,7 +25,7 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'name'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Name'), 
         'permalink'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Permalink'), 
         'url'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'URL'), 
@@ -51,10 +51,10 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     }
 
     //
-    // Check access to business_id as owner
+    // Check access to tnid as owner
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $ac = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.workshopAdd');
+    $ac = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.workshopAdd');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
@@ -63,7 +63,7 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     // Check the permalink doesn't already exist
     //
     $strsql = "SELECT id FROM ciniki_workshops "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' " 
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' " 
         . "AND permalink = '" . ciniki_core_dbQuote($ciniki, $args['permalink']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'workshop');
@@ -90,7 +90,7 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     // Add the workshop to the database
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectAdd');
-    $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.workshops.workshop', $args, 0x04);
+    $rc = ciniki_core_objectAdd($ciniki, $args['tnid'], 'ciniki.workshops.workshop', $args, 0x04);
     if( $rc['stat'] != 'ok' ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
         return $rc;
@@ -101,11 +101,11 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     // If workshop was added ok, Check if any web collections to add
     //
     if( isset($args['webcollections'])
-        && isset($ciniki['business']['modules']['ciniki.web']) 
-        && ($ciniki['business']['modules']['ciniki.web']['flags']&0x08) == 0x08
+        && isset($ciniki['tenant']['modules']['ciniki.web']) 
+        && ($ciniki['tenant']['modules']['ciniki.web']['flags']&0x08) == 0x08
         ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'hooks', 'webCollectionUpdate');
-        $rc = ciniki_web_hooks_webCollectionUpdate($ciniki, $args['business_id'],
+        $rc = ciniki_web_hooks_webCollectionUpdate($ciniki, $args['tnid'],
             array('object'=>'ciniki.workshops.workshop', 'object_id'=>$workshop_id, 
                 'collection_ids'=>$args['webcollections']));
         if( $rc['stat'] != 'ok' ) {
@@ -123,11 +123,11 @@ function ciniki_workshops_workshopAdd(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'workshops');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'workshops');
 
     return array('stat'=>'ok', 'id'=>$workshop_id);
 }

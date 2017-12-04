@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, $permalink) {
+function ciniki_workshops_web_workshopDetails($ciniki, $settings, $tnid, $permalink) {
 
     $strsql = "SELECT ciniki_workshops.id, "
         . "ciniki_workshops.name, "
@@ -38,7 +38,7 @@ function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, 
             . "ciniki_workshops.id = ciniki_workshop_images.workshop_id "
             . "AND (ciniki_workshop_images.webflags&0x01) = 0 "
             . ") "
-        . "WHERE ciniki_workshops.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE ciniki_workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_workshops.permalink = '" . ciniki_core_dbQuote($ciniki, $permalink) . "' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
@@ -66,7 +66,7 @@ function ciniki_workshops_web_workshopDetails($ciniki, $settings, $business_id, 
     //
     $strsql = "SELECT id, name, extension, permalink, description "
         . "FROM ciniki_workshop_files "
-        . "WHERE ciniki_workshop_files.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE ciniki_workshop_files.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_workshop_files.workshop_id = '" . ciniki_core_dbQuote($ciniki, $workshop['id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.workshops', array(

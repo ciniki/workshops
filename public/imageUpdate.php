@@ -7,7 +7,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to add the workshop to.
+// tnid:         The ID of the tenant to add the workshop to.
 // name:                The name of the workshop.  
 //
 // Returns
@@ -20,7 +20,7 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'workshop_image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Workshop Image'), 
         'image_id'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Image'),
         'name'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Title'), 
@@ -35,10 +35,10 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $rc = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.imageUpdate'); 
+    $rc = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.imageUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }
@@ -47,7 +47,7 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
     // Get the existing image details
     //
     $strsql = "SELECT uuid, image_id FROM ciniki_workshop_images "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_image_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'item');
@@ -69,7 +69,7 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
         // Make sure the permalink is unique
         //
         $strsql = "SELECT id, name, permalink FROM ciniki_workshop_images "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
             . "AND permalink = '" . ciniki_core_dbQuote($ciniki, $args['permalink']) . "' "
             . "AND id <> '" . ciniki_core_dbQuote($ciniki, $args['workshop_image_id']) . "' "
@@ -87,6 +87,6 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
     // Update the workshop in the database
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectUpdate');
-    return ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.workshops.image', $args['workshop_image_id'], $args);
+    return ciniki_core_objectUpdate($ciniki, $args['tnid'], 'ciniki.workshops.image', $args['workshop_image_id'], $args);
 }
 ?>

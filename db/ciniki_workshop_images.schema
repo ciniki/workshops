@@ -8,7 +8,7 @@
 # ------
 # id:               The ID of the workshop image.
 # uuid:             The Universal Unique ID.
-# business_id:      The ID of the business the workshop is attached to.
+# tnid:             The ID of the tenant the workshop is attached to.
 #
 # workshop_id:      The ID of the workshop from the ciniki_workshops table.
 # 
@@ -34,7 +34,7 @@
 create table ciniki_workshop_images (
     id int not null auto_increment,
     uuid char(36) not null,
-    business_id int not null,
+    tnid int not null,
     workshop_id int not null,
     name varchar(200) not null,
     permalink varchar(200) not null,
@@ -46,5 +46,5 @@ create table ciniki_workshop_images (
     last_updated datetime not null,
     primary key (id),
     index (workshop_id, name),
-    index (business_id, uuid, last_updated)
+    index (tnid, uuid, last_updated)
 ) ENGINE='InnoDB', COMMENT='v1.01';

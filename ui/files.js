@@ -1,5 +1,5 @@
 //
-// The workshops app to manage the workshops for the business
+// The workshops app to manage the workshops for the tenant
 //
 function ciniki_workshops_files() {
     this.init = function() {
@@ -56,7 +56,7 @@ function ciniki_workshops_files() {
             return this.data[s];
         };
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.workshops.fileHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.workshops.fileHistory', 'args':{'tnid':M.curTenantID, 
                 'file_id':this.file_id, 'field':i}};
         };
         this.edit.addButton('save', 'Save', 'M.ciniki_workshops_files.saveFile();');
@@ -106,7 +106,7 @@ function ciniki_workshops_files() {
 
         if( c != '' ) {
             var rsp = M.api.postJSONFormData('ciniki.workshops.fileAdd', 
-                {'business_id':M.curBusinessID, 'workshop_id':M.ciniki_workshops_files.add.workshop_id}, c,
+                {'tnid':M.curTenantID, 'workshop_id':M.ciniki_workshops_files.add.workshop_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -125,7 +125,7 @@ function ciniki_workshops_files() {
         if( fid != null ) {
             this.edit.file_id = fid;
         }
-        var rsp = M.api.getJSONCb('ciniki.workshops.fileGet', {'business_id':M.curBusinessID, 
+        var rsp = M.api.getJSONCb('ciniki.workshops.fileGet', {'tnid':M.curTenantID, 
             'file_id':this.edit.file_id}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
@@ -142,7 +142,7 @@ function ciniki_workshops_files() {
 
         if( c != '' ) {
             var rsp = M.api.postJSONFormData('ciniki.workshops.fileUpdate', 
-                {'business_id':M.curBusinessID, 'file_id':this.edit.file_id}, c,
+                {'tnid':M.curTenantID, 'file_id':this.edit.file_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -156,7 +156,7 @@ function ciniki_workshops_files() {
 
     this.deleteFile = function() {
         if( confirm('Are you sure you want to delete \'' + this.edit.data.name + '\'?  All information about it will be removed and unrecoverable.') ) {
-            var rsp = M.api.getJSONCb('ciniki.workshops.fileDelete', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.workshops.fileDelete', {'tnid':M.curTenantID, 
                 'file_id':M.ciniki_workshops_files.edit.file_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -168,6 +168,6 @@ function ciniki_workshops_files() {
     };
 
     this.downloadFile = function(fid) {
-        M.api.openFile('ciniki.workshops.fileDownload', {'business_id':M.curBusinessID, 'file_id':fid});
+        M.api.openFile('ciniki.workshops.fileDownload', {'tnid':M.curTenantID, 'file_id':fid});
     };
 }

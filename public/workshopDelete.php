@@ -2,13 +2,13 @@
 //
 // Description
 // -----------
-// This method will delete a workshop from the business.
+// This method will delete a workshop from the tenant.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business the workshop is attached to.
+// tnid:         The ID of the tenant the workshop is attached to.
 // workshop_id:         The ID of the workshop to be removed.
 //
 // Returns
@@ -21,7 +21,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'workshop_id'=>array('required'=>'yes', 'default'=>'', 'blank'=>'yes', 'name'=>'Workshop'), 
         ));
     if( $rc['stat'] != 'ok' ) {
@@ -30,10 +30,10 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner
+    // Check access to tnid as owner
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $ac = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.workshopDelete');
+    $ac = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.workshopDelete');
     if( $ac['stat'] != 'ok' ) {
         return $ac;
     }
@@ -42,7 +42,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     // Get the uuid of the workshop to be deleted
     //
     $strsql = "SELECT uuid FROM ciniki_workshops "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQuery');
@@ -73,7 +73,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     // Remove the images
     //
     $strsql = "SELECT id, uuid, image_id FROM ciniki_workshop_images "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'image');
@@ -85,7 +85,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
         $images = $rc['rows'];
         
         foreach($images as $iid => $image) {
-            $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.workshops.image', 
+            $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.workshops.image', 
                 $image['id'], $image['uuid'], 0x04);
             if( $rc['stat'] != 'ok' ) {
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
@@ -99,7 +99,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
     $strsql = "SELECT id, uuid "
         . "FROM ciniki_workshop_files "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'file');
@@ -110,7 +110,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     if( isset($rc['rows']) && count($rc['rows']) > 0 ) {
         $files = $rc['rows'];
         foreach($files as $fid => $file) {
-            $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.workshops.file', 
+            $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.workshops.file', 
                 $file['id'], $file['uuid'], 0x04);
             if( $rc['stat'] != 'ok' ) {
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
@@ -124,7 +124,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
     $strsql = "SELECT id, uuid "
         . "FROM ciniki_workshop_registrations "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'registration');
@@ -136,7 +136,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'registrationDelete');
         $registrations = $rc['rows'];
         foreach($registrations as $rid => $registration) {
-            $rc = ciniki_core__registrationDelete($ciniki, $args['business_id'], 
+            $rc = ciniki_core__registrationDelete($ciniki, $args['tnid'], 
                 $registration['id'],$registration['uuid']);
             if( $rc['stat'] != 'ok' ) {
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
@@ -150,7 +150,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
 /*  $strsql = "SELECT id, uuid "
         . "FROM ciniki_workshop_registration_questions "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.workshops', 'question');
@@ -162,7 +162,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
         $questions = $rc['rows'];
         foreach($questions as $qid => $question) {
             $rc = ciniki_core_objectDelete($ciniki, 'ciniki.workshops.question', $question['id'], $question['uuid'],
-                array('business_id'=>$args['business_id']), 0x04);
+                array('tnid'=>$args['tnid']), 0x04);
             if( $rc['stat'] != 'ok' ) {
                 ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
                 return $rc; 
@@ -174,11 +174,11 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
     // Remove the workshop from any web collections
     //
-    if( isset($ciniki['business']['modules']['ciniki.web']) 
-        && ($ciniki['business']['modules']['ciniki.web']['flags']&0x08) == 0x08
+    if( isset($ciniki['tenant']['modules']['ciniki.web']) 
+        && ($ciniki['tenant']['modules']['ciniki.web']['flags']&0x08) == 0x08
         ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'hooks', 'webCollectionDeleteObjRef');
-        $rc = ciniki_web_hooks_webCollectionDeleteObjRef($ciniki, $args['business_id'],
+        $rc = ciniki_web_hooks_webCollectionDeleteObjRef($ciniki, $args['tnid'],
             array('object'=>'ciniki.workshops.workshop', 'object_id'=>$args['workshop_id']));
         if( $rc['stat'] != 'ok' ) { 
             ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
@@ -189,7 +189,7 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     //
     // Remove the workshop
     //
-    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.workshops.workshop', 
+    $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.workshops.workshop', 
         $args['workshop_id'], $workshop_uuid, 0x04);
     if( $rc['stat'] != 'ok' ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.workshops');
@@ -205,11 +205,11 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'workshops');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'workshops');
 
 //  $ciniki['syncqueue'][] = array('push'=>'ciniki.workshops.workshop',
 //      'args'=>array('delete_uuid'=>$workshop_uuid, 'delete_id'=>$args['workshop_id']));

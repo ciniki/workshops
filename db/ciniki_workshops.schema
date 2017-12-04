@@ -2,14 +2,14 @@
 # Description
 # -----------
 # The workshops table stores information about workshops that are related
-# to the business, or the business will be attending.
+# to the tenant, or the tenant will be attending.
 # This module was developed to support artists shows and workshops.
 #
 # Fields
 # ------
 # id:               The ID assigned to the workshop.
 # uuid:             The Universal Unique ID.
-# business_id:      The business the workshop is attached to.
+# tnid:             The tenant the workshop is attached to.
 # name:             The name for the workshop.
 # permalink:        The permalink for use in the url of the workshop.
 # url:              The URL for more information on the workshop.
@@ -36,7 +36,7 @@
 create table ciniki_workshops (
     id int not null auto_increment,
     uuid char(36) not null,
-    business_id int not null,
+    tnid int not null,
     name varchar(150) not null,
     permalink varchar(150) not null,
     url varchar(250) not null,
@@ -52,6 +52,6 @@ create table ciniki_workshops (
     last_updated datetime not null,
     primary key (id),
     unique index (uuid),
-    index (business_id, name, start_date),
-    index business_uuid (business_id, uuid, last_updated)
+    index (tnid, name, start_date),
+    index tenant_uuid (tnid, uuid, last_updated)
 ) ENGINE='InnoDB', COMMENT='v1.02';

@@ -10,7 +10,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // workshop_id:         The ID of the workshop to get the history for.
 // field:               The field to get the history for. This can be any of the elements 
 //                      returned by the ciniki.workshops.get method.
@@ -28,7 +28,7 @@ function ciniki_workshops_workshopHistory($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'workshop_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Workshop'), 
         'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'field'), 
         ));
@@ -38,24 +38,24 @@ function ciniki_workshops_workshopHistory($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $rc = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.workshopHistory');
+    $rc = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.workshopHistory');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
 
     if( $args['field'] == 'start_date' ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
-        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['business_id'], 'ciniki_workshops', $args['workshop_id'], $args['field'],'date');
+        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['tnid'], 'ciniki_workshops', $args['workshop_id'], $args['field'],'date');
     }
     if( $args['field'] == 'end_date' ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
-        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['business_id'], 'ciniki_workshops', $args['workshop_id'], $args['field'], 'date');
+        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['tnid'], 'ciniki_workshops', $args['workshop_id'], $args['field'], 'date');
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
-    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['business_id'], 'ciniki_workshops', $args['workshop_id'], $args['field']);
+    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.workshops', 'ciniki_workshop_history', $args['tnid'], 'ciniki_workshops', $args['workshop_id'], $args['field']);
 }
 ?>

@@ -2,14 +2,14 @@
 //
 // Description
 // -----------
-// This method will return the list of workshops for a business.  It is restricted
-// to business owners and sysadmins.
+// This method will return the list of workshops for a tenant.  It is restricted
+// to tenant owners and sysadmins.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to get workshops for.
+// tnid:     The ID of the tenant to get workshops for.
 //
 // Returns
 // -------
@@ -24,7 +24,7 @@ function ciniki_workshops_workshopList($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         ));
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -32,10 +32,10 @@ function ciniki_workshops_workshopList($ciniki) {
     $args = $rc['args'];
     
     //  
-    // Check access to business_id as owner, or sys admin. 
+    // Check access to tnid as owner, or sys admin. 
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $ac = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.workshopList');
+    $ac = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.workshopList');
     if( $ac['stat'] != 'ok' ) { 
         return $ac;
     }   
@@ -50,7 +50,7 @@ function ciniki_workshops_workshopList($ciniki) {
         . "DATE_FORMAT(start_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS start_date, "
         . "DATE_FORMAT(end_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS end_date "
         . "FROM ciniki_workshops "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND (end_date >= DATE(NOW()) OR start_date >= DATE(NOW())) "
         . "ORDER BY ciniki_workshops.start_date ASC "
         . "";
@@ -70,7 +70,7 @@ function ciniki_workshops_workshopList($ciniki) {
         . "DATE_FORMAT(start_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS start_date, "
         . "DATE_FORMAT(end_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS end_date "
         . "FROM ciniki_workshops "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND ((ciniki_workshops.end_date > ciniki_workshops.start_date AND ciniki_workshops.end_date < DATE(NOW())) "
             . "OR (ciniki_workshops.end_date < ciniki_workshops.start_date AND ciniki_workshops.start_date <= DATE(NOW())) "
             . ") "

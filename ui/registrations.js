@@ -71,7 +71,7 @@ function ciniki_workshops_registrations() {
             };  
         this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.workshops.registrationHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.workshops.registrationHistory', 'args':{'tnid':M.curTenantID, 
                 'registration_id':this.registration_id, 'workshop_id':this.workshop_id, 'field':i}};
         }
         this.edit.sectionData = function(s) {
@@ -117,7 +117,7 @@ function ciniki_workshops_registrations() {
             this.menu.workshop_id = eid;
         }
         var rsp = M.api.getJSONCb('ciniki.workshops.registrationList', 
-            {'business_id':M.curBusinessID, 'workshop_id':this.menu.workshop_id}, function(rsp) {
+            {'tnid':M.curTenantID, 'workshop_id':this.menu.workshop_id}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -163,7 +163,7 @@ function ciniki_workshops_registrations() {
         // Check if this is editing a existing registration or adding a new one
         if( this.edit.registration_id > 0 ) {
             this.edit.sections._buttons.buttons.delete.visible = 'yes';
-            var rsp = M.api.getJSONCb('ciniki.workshops.registrationGet', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.workshops.registrationGet', {'tnid':M.curTenantID, 
                 'registration_id':this.edit.registration_id, 'customer':'yes'}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -177,7 +177,7 @@ function ciniki_workshops_registrations() {
                 });
         } else if( this.edit.customer_id > 0 ) {
             this.edit.sections._buttons.buttons.delete.visible = 'no';
-            var rsp = M.api.getJSONCb('ciniki.customers.customerDetails', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.customers.customerDetails', {'tnid':M.curTenantID, 
                 'customer_id':this.edit.customer_id, 'phones':'yes', 'emails':'yes'}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -199,7 +199,7 @@ function ciniki_workshops_registrations() {
             this.edit.customer_id = cid;
         }
         if( this.edit.customer_id > 0 ) {
-            var rsp = M.api.getJSONCb('ciniki.customers.customerDetails', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.customers.customerDetails', {'tnid':M.curTenantID, 
                 'customer_id':this.edit.customer_id, 'phones':'yes', 'emails':'yes'}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -220,7 +220,7 @@ function ciniki_workshops_registrations() {
             }
             if( c != '' ) {
                 var rsp = M.api.postJSONCb('ciniki.workshops.registrationUpdate', 
-                    {'business_id':M.curBusinessID, 
+                    {'tnid':M.curTenantID, 
                     'registration_id':M.ciniki_workshops_registrations.edit.registration_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
@@ -235,7 +235,7 @@ function ciniki_workshops_registrations() {
         } else {
             var c = this.edit.serializeForm('yes');
             var rsp = M.api.postJSONCb('ciniki.workshops.registrationAdd', 
-                {'business_id':M.curBusinessID, 'workshop_id':this.edit.workshop_id,
+                {'tnid':M.curTenantID, 'workshop_id':this.edit.workshop_id,
                     'customer_id':this.edit.customer_id}, c, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -249,7 +249,7 @@ function ciniki_workshops_registrations() {
     this.deleteRegistration = function() {
         if( confirm("Are you sure you want to remove this registration?") ) {
             var rsp = M.api.getJSONCb('ciniki.workshops.registrationDelete', 
-                {'business_id':M.curBusinessID, 
+                {'tnid':M.curTenantID, 
                 'registration_id':this.edit.registration_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);

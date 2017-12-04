@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_workshops_web_webCollectionList($ciniki, $settings, $business_id, $args) {
+function ciniki_workshops_web_webCollectionList($ciniki, $settings, $tnid, $args) {
 
     $strsql = "SELECT ciniki_workshops.id, "
         . "ciniki_workshops.name, "
@@ -32,7 +32,7 @@ function ciniki_workshops_web_webCollectionList($ciniki, $settings, $business_id
         . "FROM ciniki_web_collection_objrefs "
         . "INNER JOIN ciniki_workshops ON ("
             . "ciniki_web_collection_objrefs.object_id = ciniki_workshops.id "
-            . "AND ciniki_workshops.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "AND ciniki_workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "";
             if( isset($args['type']) && $args['type'] == 'past' ) {
                 $strsql .= "AND ((ciniki_workshops.end_date > ciniki_workshops.start_date AND ciniki_workshops.end_date < DATE(NOW())) "
@@ -43,15 +43,15 @@ function ciniki_workshops_web_webCollectionList($ciniki, $settings, $business_id
             }
     $strsql .= ") "
         . "LEFT JOIN ciniki_workshop_images ON (ciniki_workshops.id = ciniki_workshop_images.workshop_id "
-            . "AND ciniki_workshop_images.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "AND ciniki_workshop_images.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND (ciniki_workshop_images.webflags&0x01) = 0 " // public images
             . ") "
         . "LEFT JOIN ciniki_workshop_files ON (ciniki_workshops.id = ciniki_workshop_files.workshop_id "
-            . "AND ciniki_workshop_files.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "AND ciniki_workshop_files.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND (ciniki_workshop_files.webflags&0x01) = 0 " // public files
             . ") "
         . "WHERE ciniki_web_collection_objrefs.collection_id = '" . ciniki_core_dbQuote($ciniki, $args['collection_id']) . "' "
-        . "AND ciniki_web_collection_objrefs.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "AND ciniki_web_collection_objrefs.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_web_collection_objrefs.object = 'ciniki.workshops.workshop' "
         . "";
     if( isset($args['type']) && $args['type'] == 'past' ) {

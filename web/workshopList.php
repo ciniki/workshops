@@ -9,7 +9,7 @@
 // Returns
 // -------
 //
-function ciniki_workshops_web_workshopList($ciniki, $settings, $business_id, $type, $limit) {
+function ciniki_workshops_web_workshopList($ciniki, $settings, $tnid, $type, $limit) {
 
     $strsql = "SELECT ciniki_workshops.id, "
         . "ciniki_workshops.name, "
@@ -31,14 +31,14 @@ function ciniki_workshops_web_workshopList($ciniki, $settings, $business_id, $ty
         . "COUNT(ciniki_workshop_files.id) AS num_files "
         . "FROM ciniki_workshops "
         . "LEFT JOIN ciniki_workshop_images ON (ciniki_workshops.id = ciniki_workshop_images.workshop_id "
-            . "AND ciniki_workshop_images.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "AND ciniki_workshop_images.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND (ciniki_workshop_images.webflags&0x01) = 0 " // public images
             . ") "
         . "LEFT JOIN ciniki_workshop_files ON (ciniki_workshops.id = ciniki_workshop_files.workshop_id "
-            . "AND ciniki_workshop_files.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "AND ciniki_workshop_files.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND (ciniki_workshop_files.webflags&0x01) = 0 " // public files
             . ") "
-        . "WHERE ciniki_workshops.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' ";
+        . "WHERE ciniki_workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' ";
     if( $type == 'past' ) {
         $strsql .= "AND ((ciniki_workshops.end_date > ciniki_workshops.start_date AND ciniki_workshops.end_date < DATE(NOW())) "
                 . "OR (ciniki_workshops.end_date < ciniki_workshops.start_date AND ciniki_workshops.start_date < DATE(NOW())) "

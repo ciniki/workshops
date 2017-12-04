@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business the workshop is attached to.
+// tnid:     The ID of the tenant the workshop is attached to.
 // workshop_id:     The ID of the workshop to get the details for.
 // 
 // Returns
@@ -23,7 +23,7 @@ function ciniki_workshops_workshopGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'workshop_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Workshop'), 
         'images'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Images'),
         'files'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Files'),
@@ -36,10 +36,10 @@ function ciniki_workshops_workshopGet($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'workshops', 'private', 'checkAccess');
-    $rc = ciniki_workshops_checkAccess($ciniki, $args['business_id'], 'ciniki.workshops.workshopGet'); 
+    $rc = ciniki_workshops_checkAccess($ciniki, $args['tnid'], 'ciniki.workshops.workshopGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -73,10 +73,10 @@ function ciniki_workshops_workshopGet($ciniki) {
     $strsql .= "FROM ciniki_workshops ";
     if( isset($args['images']) && $args['images'] == 'yes' ) {
         $strsql .= "LEFT JOIN ciniki_workshop_images ON (ciniki_workshops.id = ciniki_workshop_images.workshop_id "
-            . "AND ciniki_workshop_images.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "AND ciniki_workshop_images.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . ") ";
     }
-    $strsql .= "WHERE ciniki_workshops.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+    $strsql .= "WHERE ciniki_workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND ciniki_workshops.id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
         . "";
     
@@ -102,7 +102,7 @@ function ciniki_workshops_workshopGet($ciniki) {
         if( isset($workshop['images']) ) {
             foreach($workshop['images'] as $img_id => $img) {
                 if( isset($img['image']['image_id']) && $img['image']['image_id'] > 0 ) {
-                    $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['business_id'], $img['image']['image_id'], 75);
+                    $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['tnid'], $img['image']['image_id'], 75);
                     if( $rc['stat'] != 'ok' ) {
                         return $rc;
                     }
@@ -133,7 +133,7 @@ function ciniki_workshops_workshopGet($ciniki) {
         $workshop['tickets_sold'] = 0;
         $strsql = "SELECT 'num_tickets', SUM(num_tickets) AS num_tickets "  
             . "FROM ciniki_workshop_registrations "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND ciniki_workshop_registrations.workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
             . "";
         ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbCount');
@@ -152,7 +152,7 @@ function ciniki_workshops_workshopGet($ciniki) {
     if( isset($args['files']) && $args['files'] == 'yes' ) {
         $strsql = "SELECT id, name, extension, permalink "
             . "FROM ciniki_workshop_files "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND ciniki_workshop_files.workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
             . "";
         $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.workshops', array(
@@ -171,11 +171,11 @@ function ciniki_workshops_workshopGet($ciniki) {
     // Get the list of web collections, and which ones this workshop is attached to
     //
     if( isset($args['webcollections']) && $args['webcollections'] == 'yes'
-        && isset($ciniki['business']['modules']['ciniki.web']) 
-        && ($ciniki['business']['modules']['ciniki.web']['flags']&0x08) == 0x08
+        && isset($ciniki['tenant']['modules']['ciniki.web']) 
+        && ($ciniki['tenant']['modules']['ciniki.web']['flags']&0x08) == 0x08
         ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'web', 'hooks', 'webCollectionList');
-        $rc = ciniki_web_hooks_webCollectionList($ciniki, $args['business_id'],
+        $rc = ciniki_web_hooks_webCollectionList($ciniki, $args['tnid'],
             array('object'=>'ciniki.workshops.workshop', 'object_id'=>$args['workshop_id']));
         if( $rc['stat'] != 'ok' ) { 
             return $rc;
