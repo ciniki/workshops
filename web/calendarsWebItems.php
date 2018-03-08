@@ -73,7 +73,6 @@ function ciniki_workshops_web_calendarsWebItems($ciniki, $settings, $tnid, $args
         . "ciniki_workshops.primary_image_id "
         . "FROM ciniki_workshops "
         . "WHERE ciniki_workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
-        . "AND (ciniki_workshops.flags&0x01) = 0x01 "
         // Workshop has to start or end between the dates for the calendar
         . "AND (("
             . "ciniki_workshops.start_date >= '" . ciniki_core_dbQuote($ciniki, $sdt->format('Y-m-d')) . "' "
