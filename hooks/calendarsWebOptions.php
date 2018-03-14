@@ -29,6 +29,16 @@ function ciniki_workshops_hooks_calendarsWebOptions(&$ciniki, $tnid, $args) {
 
     $options = array();
     $options[] = array(
+        'label'=>'Include Workshops',
+        'setting'=>'ciniki-workshops-calendar-include',
+        'type'=>'toggle',
+        'value'=>(isset($settings['ciniki-workshops-calendar-include'])?$settings['ciniki-workshops-calendar-include']:'yes'),
+        'toggles'=>array(
+            array('value'=>'no', 'label'=>'No'),
+            array('value'=>'yes', 'label'=>'Yes'),
+            ),
+        );
+    $options[] = array(
         'label'=>'Workshop Title Prefix',
         'setting'=>'ciniki-workshops-prefix',
         'type'=>'text',
