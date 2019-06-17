@@ -53,7 +53,7 @@ function ciniki_workshops_web_workshopList($ciniki, $settings, $tnid, $type, $li
             . "";
     }
     if( $limit != '' && $limit > 0 && is_int($limit) ) {
-        $strsql .= "LIMIT $limit ";
+        $strsql .= "LIMIT " . intval($limit) . " ";
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
