@@ -16,26 +16,6 @@
 function ciniki_workshops_hooks_uiCustomersData($ciniki, $tnid, $args) {
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuoteIDs');
-    //
-    // Get the time information for tenant and user
-    //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
-    $rc = ciniki_tenants_intlSettings($ciniki, $tnid);
-    if( $rc['stat'] != 'ok' ) {
-        return $rc;
-    }
-    $intl_timezone = $rc['settings']['intl-default-timezone'];
-
-    //
-    // Load the date format strings for the user
-    //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
-    $date_format = ciniki_users_dateFormat($ciniki, 'mysql');
-
-    //
-    // Setup current date in tenant timezone
-    //
-    $cur_date = new DateTime('now', new DateTimeZone($intl_timezone));
 
     //
     // Default response
@@ -60,28 +40,28 @@ function ciniki_workshops_hooks_uiCustomersData($ciniki, $tnid, $args) {
             ),
         'data' => array(),
         );
-        $strsql = "SELECT regs.id, regs.customer_id, "
-            . "IFNULL(customers.display_name, '') AS display_name, "
-            . "workshops.name, "
-            . "DATE_FORMAT(workshops.start_date, '%b %d, %Y') AS start_date "
-            . "FROM ciniki_workshop_registrations AS regs "
-            . "INNER JOIN ciniki_workshops AS workshops ON ("
-                . "regs.workshop_id = workshops.id "
-                . "AND workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
-                . ") "
-            . "LEFT JOIN ciniki_customers AS customers ON ("
-                . "regs.customer_id = customers.id "
-                . "AND customers.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
-                . ") "
-            . "WHERE regs.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
-            . "";
-        if( isset($args['customer_id']) ) {
-            $strsql .= "AND regs.customer_id = '" . ciniki_core_dbQuote($ciniki, $args['customer_id']) . "' ";
-        } elseif( isset($args['customer_ids']) && count($args['customer_ids']) > 0 ) {
-            $strsql .= "AND regs.customer_id IN (" . ciniki_core_dbQuoteIDs($ciniki, $args['customer_ids']) . ") ";
-        } else {
-            return array('stat'=>'ok');
-        }
+    $strsql = "SELECT regs.id, regs.customer_id, "
+        . "IFNULL(customers.display_name, '') AS display_name, "
+        . "workshops.name, "
+        . "DATE_FORMAT(workshops.start_date, '%b %d, %Y') AS start_date "
+        . "FROM ciniki_workshop_registrations AS regs "
+        . "INNER JOIN ciniki_workshops AS workshops ON ("
+            . "regs.workshop_id = workshops.id "
+            . "AND workshops.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
+            . ") "
+        . "LEFT JOIN ciniki_customers AS customers ON ("
+            . "regs.customer_id = customers.id "
+            . "AND customers.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
+            . ") "
+        . "WHERE regs.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
+        . "";
+    if( isset($args['customer_id']) ) {
+        $strsql .= "AND regs.customer_id = '" . ciniki_core_dbQuote($ciniki, $args['customer_id']) . "' ";
+    } elseif( isset($args['customer_ids']) && count($args['customer_ids']) > 0 ) {
+        $strsql .= "AND regs.customer_id IN (" . ciniki_core_dbQuoteIDs($ciniki, $args['customer_ids']) . ") ";
+    } else {
+        return array('stat'=>'ok');
+    }
     $strsql .= "ORDER BY customers.display_name, workshops.start_date DESC, workshops.name "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryArrayTree');
