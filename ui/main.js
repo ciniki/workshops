@@ -243,7 +243,7 @@ function ciniki_workshops_main() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_workshops_main', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         } 
 
@@ -392,7 +392,7 @@ function ciniki_workshops_main() {
     };
 
     this.removeWorkshop = function() {
-        if( confirm("Are you sure you want to remove '" + this.workshop.data.name + "' as an workshop ?") ) {
+        M.confirm("Are you sure you want to remove '" + this.workshop.data.name + "' as an workshop ?",null,function() {
             var rsp = M.api.getJSONCb('ciniki.workshops.workshopDelete', 
                 {'tnid':M.curTenantID, 'workshop_id':M.ciniki_workshops_main.workshop.workshop_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
@@ -401,6 +401,6 @@ function ciniki_workshops_main() {
                     }
                     M.ciniki_workshops_main.workshop.close();
                 });
-        }
+        });
     }
 };

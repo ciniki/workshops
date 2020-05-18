@@ -104,7 +104,7 @@ function ciniki_workshops_registrations() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_workshops_registrations', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         } 
 
@@ -247,16 +247,16 @@ function ciniki_workshops_registrations() {
     };
 
     this.deleteRegistration = function() {
-        if( confirm("Are you sure you want to remove this registration?") ) {
+        M.confirm("Are you sure you want to remove this registration?",null,function(,null,function() {
             var rsp = M.api.getJSONCb('ciniki.workshops.registrationDelete', 
                 {'tnid':M.curTenantID, 
-                'registration_id':this.edit.registration_id}, function(rsp) {
+                'registration_id':M.ciniki_workshops_registrations.edit.registration_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
                     M.ciniki_workshops_registrations.edit.close();  
                 });
-        }
+        });
     };
 }
