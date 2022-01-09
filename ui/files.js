@@ -155,7 +155,7 @@ function ciniki_workshops_files() {
     };
 
     this.deleteFile = function() {
-        M.confirm('Are you sure you want to delete \'' + this.edit.data.name + '\'?  All information about it will be removed and unrecoverable.',null,function(,null,function() {
+        M.confirm('Are you sure you want to delete \'' + this.edit.data.name + '\'?  All information about it will be removed and unrecoverable.',null,function() {
             var rsp = M.api.getJSONCb('ciniki.workshops.fileDelete', {'tnid':M.curTenantID, 
                 'file_id':M.ciniki_workshops_files.edit.file_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
