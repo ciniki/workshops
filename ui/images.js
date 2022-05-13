@@ -132,8 +132,8 @@ function ciniki_workshops_images() {
     };
 
     this.deleteImage = function() {
-        M.confirm('Are you sure you want to delete this image?',null,function(,null,function() {
-            var rsp = M.api.getJSONCb('ciniki.workshops.imageDelete', {'tnid':M.curTenantID, 
+        M.confirm('Are you sure you want to delete this image?',null,function() {
+            M.api.getJSONCb('ciniki.workshops.imageDelete', {'tnid':M.curTenantID, 
                 'workshop_image_id':M.ciniki_workshops_images.edit.workshop_image_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
