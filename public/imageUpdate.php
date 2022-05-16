@@ -46,7 +46,7 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
     //
     // Get the existing image details
     //
-    $strsql = "SELECT uuid, image_id FROM ciniki_workshop_images "
+    $strsql = "SELECT uuid, workshop_id, image_id FROM ciniki_workshop_images "
         . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_image_id']) . "' "
         . "";
@@ -70,7 +70,7 @@ function ciniki_workshops_imageUpdate(&$ciniki) {
         //
         $strsql = "SELECT id, name, permalink FROM ciniki_workshop_images "
             . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
-            . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $args['workshop_id']) . "' "
+            . "AND workshop_id = '" . ciniki_core_dbQuote($ciniki, $item['workshop_id']) . "' "
             . "AND permalink = '" . ciniki_core_dbQuote($ciniki, $args['permalink']) . "' "
             . "AND id <> '" . ciniki_core_dbQuote($ciniki, $args['workshop_image_id']) . "' "
             . "";
