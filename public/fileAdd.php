@@ -53,6 +53,16 @@ function ciniki_workshops_fileAdd(&$ciniki) {
     }   
 
     //
+    // Get the tenant storage directory
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'hooks', 'storageDir');
+    $rc = ciniki_tenants_hooks_storageDir($ciniki, $args['tnid'], array());
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $tenant_storage_dir = $rc['storage_dir'];
+
+    //
     // Check the permalink doesn't already exist
     //
     $strsql = "SELECT id, name, permalink FROM ciniki_workshop_files "
@@ -92,7 +102,30 @@ function ciniki_workshops_fileAdd(&$ciniki) {
     if( $args['extension'] != 'pdf' ) {
         return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.7', 'msg'=>'The file must be a PDF file.'));
     }
-    $args['binary_content'] = file_get_contents($_FILES['uploadfile']['tmp_name']);
+    //
+    // Get a new UUID
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbUUID');
+    $rc = ciniki_core_dbUUID($ciniki, 'ciniki.workshops');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $args['uuid'] = $rc['uuid'];
+
+    //
+    // Move file to storage
+    //
+    $storage_filename = $tenant_storage_dir . '/ciniki.workshops/files/' . $args['uuid'][0] . '/' . $args['uuid'];
+    if( !is_dir(dirname($storage_filename)) ) {
+        if( !mkdir(dirname($storage_filename), 0700, true) ) {
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.96', 'msg'=>'Unable to add file'));
+        }
+    }
+
+    if( !rename($_FILES['uploadfile']['tmp_name'], $storage_filename) ) {
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.workshops.97', 'msg'=>'Unable to add file'));
+    }
+
 
     //
     // Add the file to the database

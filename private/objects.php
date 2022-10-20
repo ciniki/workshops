@@ -59,7 +59,7 @@ function ciniki_workshops_objects($ciniki) {
             'description'=>array(),
             'org_filename'=>array(),
             'publish_date'=>array(),
-            'binary_content'=>array('history'=>'no'),
+            'binary_content'=>array('history'=>'no', 'default'=>'no'),
             ),
         'history_table'=>'ciniki_workshop_history',
         );

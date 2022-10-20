@@ -39,6 +39,16 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     }
 
     //
+    // Get the tenant storage directory
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'hooks', 'storageDir');
+    $rc = ciniki_tenants_hooks_storageDir($ciniki, $args['tnid'], array());
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $tenant_storage_dir = $rc['storage_dir'];
+
+    //
     // Get the uuid of the workshop to be deleted
     //
     $strsql = "SELECT uuid FROM ciniki_workshops "
@@ -110,6 +120,17 @@ function ciniki_workshops_workshopDelete(&$ciniki) {
     if( isset($rc['rows']) && count($rc['rows']) > 0 ) {
         $files = $rc['rows'];
         foreach($files as $fid => $file) {
+            //
+            // Remove file from disk
+            //
+            $storage_filename = $tenant_storage_dir . '/ciniki.workshops/files/' . $file['uuid'][0] . '/' . $file['uuid'];
+            if( file_exists($storage_filename) ) {
+                unlink($storage_filename);
+            }
+
+            //
+            // Remove the object 
+            //
             $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.workshops.file', 
                 $file['id'], $file['uuid'], 0x04);
             if( $rc['stat'] != 'ok' ) {
