@@ -77,6 +77,7 @@ function ciniki_workshops_hooks_uiCustomersData($ciniki, $tnid, $args) {
     $rsp['tabs'][] = array(
         'id' => 'ciniki.workshops.registrations',
         'label' => 'Workshops',
+        'priority' => 3000,
         'sections' => $sections,
         );
     $sections = array();
